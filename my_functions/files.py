@@ -68,6 +68,7 @@ def write_json_file(file_name, my_wardrobe):
         return
     list_articles = {}
     for article in list_items:
-        list_articles[article.name()] = article.__dict__
+        # list_articles[article.name()] = article.__dict__
+        list_articles[article.name()] = article.item_dictionary()
     file.write(json.dumps(list_articles))
     file.close()

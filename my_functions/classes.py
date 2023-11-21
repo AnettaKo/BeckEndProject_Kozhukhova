@@ -4,10 +4,10 @@ from my_functions.interface import delete_data_question
 
 
 class Item:
-    def __init__(self, _Item__name: str, item_class: str, item_type: str, size: str, season: str,
+    def __init__(self, name: str, item_class: str, item_type: str, size: str, season: str,
                  color: str, brand: str, price: float = 0.0, description: str = ''):
 
-        self.__name = _Item__name
+        self.__name = name
         self.item_class = item_class
         self.item_type = item_type
         self.size = size
@@ -26,7 +26,16 @@ class Item:
             str(self.brand) + delimiter + str(self.price) + delimiter + str(self.description)
 
     def name(self):
-        return self.__name
+         return self.__name
+
+    def item_dictionary(self):
+        article_dict = {}
+        for key in self.__dict__:
+            if key == "_Item__name":
+                article_dict['name'] = self.__dict__[key]
+            else:
+                article_dict[key] = self.__dict__[key]
+        return article_dict
 
     @classmethod
     def input_name(cls):
@@ -56,7 +65,7 @@ class Item:
         attributes = list(self.__dict__.keys())
         attribute = input_from_classificator(attributes, 'attribute')
         print(f'old {attribute} = {self.__getattribute__(attribute)}')
-        if attribute == "_Item__name":
+        if attribute == "name":
             name = Item.input_name()
             article = my_wardrobe.find_item(name, True)
             if article is None:
