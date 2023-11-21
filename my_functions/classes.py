@@ -1,13 +1,25 @@
 import my_functions.data_storage
 from my_functions.classificators import *
 from my_functions.interface import delete_data_question
+from typing import Optional
+from pydantic import BaseModel
 
+# class Item(BaseModel):
+#     __item_name: str
+#     item_class: str
+#     item_type: str
+#     size: str
+#     season: str
+#     color: str
+#     brand: str
+#     price: float
+#     description: Optional[str]
 
 class Item:
-    def __init__(self, name: str, item_class: str, item_type: str, size: str, season: str,
+    def __init__(self, item_name: str, item_class: str, item_type: str, size: str, season: str,
                  color: str, brand: str, price: float = 0.0, description: str = ''):
 
-        self.__name = name
+        self.__item_name = item_name
         self.item_class = item_class
         self.item_type = item_type
         self.size = size
@@ -18,21 +30,21 @@ class Item:
         self.description = description
 
     def __str__(self):
-        return self.__name
+        return self.__item_name
 
     def fullstr(self, delimiter="; "):
-        return str(self.__name) + delimiter + str(self.item_class) + delimiter + str(self.item_type) + delimiter \
+        return str(self.__item_name) + delimiter + str(self.item_class) + delimiter + str(self.item_type) + delimiter \
             + str(self.size) + delimiter + str(self.season) + delimiter + str(self.color) + delimiter + \
             str(self.brand) + delimiter + str(self.price) + delimiter + str(self.description)
 
     def name(self):
-         return self.__name
+         return self.__item_name
 
     def item_dictionary(self):
         article_dict = {}
         for key in self.__dict__:
-            if key == "_Item__name":
-                article_dict['name'] = self.__dict__[key]
+            if key == "_Item__item_name":
+                article_dict['item_name'] = self.__dict__[key]
             else:
                 article_dict[key] = self.__dict__[key]
         return article_dict
@@ -62,14 +74,16 @@ class Item:
 
     def change_article(self, my_wardrobe):
         print(f'article = {self.fullstr()}')
-        attributes = list(self.__dict__.keys())
+        # attributes = list(self.__dict__.keys())
+        attributes = list(self.item_dictionary().keys())
         attribute = input_from_classificator(attributes, 'attribute')
-        print(f'old {attribute} = {self.__getattribute__(attribute)}')
+        # print(f'old {attribute} = {self.__getattribute__(attribute)}')
+        print(f'old {attribute} = {self.item_dictionary()[attribute]}')
         if attribute == "name":
             name = Item.input_name()
             article = my_wardrobe.find_item(name, True)
             if article is None:
-                self.__name = name
+                self.__item_name = name
         elif attribute == "item_class":
             item_class = input_from_classificator(item_classes, 'new item_class')
             if item_class != self.item_class:
