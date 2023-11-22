@@ -66,7 +66,8 @@ def table_report(my_wardrobe, select=False):
     # cells = [list(item.__dict__.values()) for item in list_items_selected]
     # cells.insert(0, list(list_items[0].__dict__.keys()))  # header
 
-    cells = [list(item.__dict__.values()) for item in list_items_selected]
+    # cells = [list(item.__dict__.values()) for item in list_items_selected]
+    cells = [list(item.item_dictionary().values()) for item in list_items_selected]
     cells.insert(0, list(list_items[0].item_dictionary().keys()))  # header
 
     fig = ff.create_table(cells, index=True)

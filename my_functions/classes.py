@@ -2,50 +2,65 @@ import my_functions.data_storage
 from my_functions.classificators import *
 from my_functions.interface import delete_data_question
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+import uuid
 
-# class Item(BaseModel):
-#     __item_name: str
-#     item_class: str
-#     item_type: str
-#     size: str
-#     season: str
-#     color: str
-#     brand: str
-#     price: float
-#     description: Optional[str]
-
-class Item:
-    def __init__(self, item_name: str, item_class: str, item_type: str, size: str, season: str,
-                 color: str, brand: str, price: float = 0.0, description: str = ''):
-
-        self.__item_name = item_name
-        self.item_class = item_class
-        self.item_type = item_type
-        self.size = size
-        self.season = season
-        self.color = color
-        self.brand = brand
-        self.price = float(price)
-        self.description = description
+class Item(BaseModel):
+    # item_name: str = Field(alias="__item_name")
+    # id: Optional[str] = Field(default_factory=uuid.uuid4(), alias="_id")
+    id: Optional[str] = Field(default="", alias="_id")
+    item_name: str
+    item_class: str
+    item_type: str
+    size: str
+    season: str
+    color: str
+    brand: str
+    price: float
+    description: Optional[str]
+#
+# class Item:
+#     def __init__(self, item_name: str, item_class: str, item_type: str, size: str, season: str,
+#                  color: str, brand: str, price: float = 0.0, description: str = ''):
+#
+#         self.__item_name = item_name
+#         self.item_class = item_class
+#         self.item_type = item_type
+#         self.size = size
+#         self.season = season
+#         self.color = color
+#         self.brand = brand
+#         self.price = float(price)
+#         self.description = description
 
     def __str__(self):
-        return self.__item_name
+        # return self.__item_name
+        return self.item_name
 
     def fullstr(self, delimiter="; "):
-        return str(self.__item_name) + delimiter + str(self.item_class) + delimiter + str(self.item_type) + delimiter \
+        # return str(self.__item_name) + delimiter + str(self.item_class) + delimiter + str(self.item_type) + delimiter \
+        #     + str(self.size) + delimiter + str(self.season) + delimiter + str(self.color) + delimiter + \
+        #     str(self.brand) + delimiter + str(self.price) + delimiter + str(self.description)
+        return str(self.item_name) + delimiter + str(self.item_class) + delimiter + str(self.item_type) + delimiter \
             + str(self.size) + delimiter + str(self.season) + delimiter + str(self.color) + delimiter + \
             str(self.brand) + delimiter + str(self.price) + delimiter + str(self.description)
 
     def name(self):
-         return self.__item_name
+         # return self.__item_name
+         return self.item_name
 
     def item_dictionary(self):
+        # article_dict = {}
+        # for key in self.__dict__:
+        #     if key == "_Item__item_name":
+        #         article_dict['item_name'] = self.__dict__[key]
+        #     else:
+        #         article_dict[key] = self.__dict__[key]
+        # return article_dict
+
         article_dict = {}
         for key in self.__dict__:
-            if key == "_Item__item_name":
-                article_dict['item_name'] = self.__dict__[key]
-            else:
+            if key != "id":
                 article_dict[key] = self.__dict__[key]
         return article_dict
 
@@ -69,7 +84,10 @@ class Item:
         price = cls.input_price("price")
         description = input('description = ').strip()
 
-        new_item = Item(name, item_class, item_type, size, season, color, brand, price, description)
+        # new_item = Item(name, item_class, item_type, size, season, color, brand, price, description)
+        # new_item = Item(__item_name = name, item_class = item_class, item_type = item_type, size=size, season=season, color=color, brand = brand, price = price, description = description)
+        new_item = Item(item_name=name, item_class=item_class, item_type=item_type, size=size, season=season,
+                        color=color, brand=brand, price=price, description=description)
         return new_item
 
     def change_article(self, my_wardrobe):
@@ -79,11 +97,13 @@ class Item:
         attribute = input_from_classificator(attributes, 'attribute')
         # print(f'old {attribute} = {self.__getattribute__(attribute)}')
         print(f'old {attribute} = {self.item_dictionary()[attribute]}')
-        if attribute == "name":
+        # if attribute == "name":
+        if attribute == "item_name":
             name = Item.input_name()
             article = my_wardrobe.find_item(name, True)
             if article is None:
-                self.__item_name = name
+                # self.__item_name = name
+                self.item_name = name
         elif attribute == "item_class":
             item_class = input_from_classificator(item_classes, 'new item_class')
             if item_class != self.item_class:
